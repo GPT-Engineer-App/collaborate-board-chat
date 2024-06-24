@@ -1,36 +1,12 @@
 import { Box, Heading, VStack, HStack, Text, Button } from "@chakra-ui/react";
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-const initialData = {
-  tasks: {
-    "task-1": { id: "task-1", content: "Take out the garbage" },
-    "task-2": { id: "task-2", content: "Watch my favorite show" },
-    "task-3": { id: "task-3", content: "Charge my phone" },
-    "task-4": { id: "task-4", content: "Cook dinner" },
-  },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "To do",
-      taskIds: ["task-1", "task-2", "task-3", "task-4"],
-    },
-    "column-2": {
-      id: "column-2",
-      title: "In progress",
-      taskIds: [],
-    },
-    "column-3": {
-      id: "column-3",
-      title: "Done",
-      taskIds: [],
-    },
-  },
-  columnOrder: ["column-1", "column-2", "column-3"],
-};
+import { users, initialData } from '../data/store';
+import TicketCreationModal from '../components/TicketCreationModal';
 
 const Kanban = () => {
   const [state, setState] = useState(initialData);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -97,9 +73,33 @@ const Kanban = () => {
     setState(newState);
   };
 
+  const handleCreateTicket = (newTask) => {
+    const newState = {
+      ...state,
+      tasks: {
+        ...state.tasks,
+        [newTask.id]: newTask,
+      },
+      columns: {
+        ...state.columns,
+        'column-1': {
+          ...state.columns['column-1'],
+          taskIds: [...state.columns['column-1'].taskIds, newTask.id],
+        },
+      },
+    };
+    setState(newState);
+  };
+
   return (
     <Box p={4}>
       <Heading mb={4}>Kanban Board</Heading>
+      <Button onClick={() => setIsModalOpen(true)}>Create Ticket</Button>
+      <TicketCreationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onCreate={handleCreateTicket}
+      />
       <DragDropContext onDragEnd={onDragEnd}>
         <HStack spacing={4} align="start">
           {state.columnOrder.map((columnId) => {
@@ -131,6 +131,8 @@ const Kanban = () => {
                               width="100%"
                             >
                               <Text>{task.content}</Text>
+                              <Text fontSize="sm" color="gray.500">Creator: {task.creator.username}</Text>
+                              <Text fontSize="sm" color="gray.500">Assignee: {task.assignee.username}</Text>
                             </Box>
                           )}
                         </Draggable>
