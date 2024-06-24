@@ -1,5 +1,9 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { users } from '../data/store';
+
+const currentUser = users[0]; // Assuming the first user is the current user
+
 import { Box, Button, Input, VStack, Heading } from "@chakra-ui/react";
 import { setItem, getItem } from "../utils/storage";
 import Kanban from "./Kanban.jsx";
@@ -23,10 +27,21 @@ const Projects = () => {
   }, []);
 
   const handleCreateProject = async () => {
+    const currentUser = users[0]; // Assuming the first user is the current user
+    
     const newProject = {
       id: Date.now(),
       name: newProjectName,
-      kanban: [],
+      ownerId: currentUser.id, // Assuming you have a way to get the current user
+      kanban: {
+        tasks: {},
+        columns: {
+          "column-1": { id: "column-1", title: "To do", taskIds: [] },
+          "column-2": { id: "column-2", title: "In progress", taskIds: [] },
+          "column-3": { id: "column-3", title: "Done", taskIds: [] },
+        },
+        columnOrder: ["column-1", "column-2", "column-3"],
+      },
       chat: [],
       notes: [],
       users: [],

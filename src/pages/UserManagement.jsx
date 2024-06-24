@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { users } from '../data/store';
+
+const getCurrentUser = async () => {
+  return users[0]; // Assuming the first user is the current user
+};
 import { useParams } from "react-router-dom";
 import { Box, Button, Input, VStack, Heading, Text } from "@chakra-ui/react";
 import { setItem, getItem } from "../utils/storage";
@@ -7,12 +12,15 @@ const UserManagement = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [newUserEmail, setNewUserEmail] = useState("");
+  const [currentUser, setCurrentUser] = useState(null); // Assuming you have a way to get the current user
 
   useEffect(() => {
     const fetchProject = async () => {
       const storedProjects = await getItem("projects");
       const currentProject = storedProjects.find((proj) => proj.id === parseInt(projectId));
       setProject(currentProject);
+      const user = await getCurrentUser();
+      setCurrentUser(user);
     };
     fetchProject();
   }, [projectId]);
@@ -20,7 +28,7 @@ const UserManagement = () => {
   const handleAddUser = async () => {
     const updatedProject = {
       ...project,
-      users: [...project.users, { email: newUserEmail, id: Date.now() }],
+      users: [...project.users, { email: newUserEmail, id: Date.now(), username: '', password: '' }],
     };
     const storedProjects = await getItem("projects");
     const updatedProjects = storedProjects.map((proj) =>
@@ -45,6 +53,8 @@ const UserManagement = () => {
   };
 
   if (!project) return <Text>Loading...</Text>;
+
+  if (currentUser.id !== project.ownerId) return <Text>You do not have permission to view this page.</Text>;
 
   return (
     <Box p={4}>
