@@ -26,6 +26,9 @@ const Navbar = () => {
               <Link as={NavLink} to={`${location.pathname}/notes`} px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
                 Notes
               </Link>
+              <Link as={NavLink} to={`${location.pathname}/users`} px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
+                Invite Users
+              </Link>
             </>
           )}
         </Box>

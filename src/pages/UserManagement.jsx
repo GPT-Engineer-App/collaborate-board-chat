@@ -25,7 +25,7 @@ const UserManagement = () => {
     fetchProject();
   }, [projectId]);
 
-  const handleAddUser = async () => {
+  const handleAddUser = async (projectId, newUserEmail) => {
     const updatedProject = {
       ...project,
       users: [...project.users, { email: newUserEmail, id: Date.now(), username: '', password: '' }],
@@ -39,7 +39,7 @@ const UserManagement = () => {
     setNewUserEmail("");
   };
 
-  const handleRemoveUser = async (userId) => {
+  const handleRemoveUser = async (projectId, userId) => {
     const updatedProject = {
       ...project,
       users: project.users.filter((user) => user.id !== userId),
@@ -65,11 +65,11 @@ const UserManagement = () => {
           value={newUserEmail}
           onChange={(e) => setNewUserEmail(e.target.value)}
         />
-        <Button onClick={handleAddUser}>Add User</Button>
+        <Button onClick={() => handleAddUser(projectId, newUserEmail)}>Add User</Button>
         {project.users.map((user) => (
           <Box key={user.id} p={2} bg="gray.100" rounded="md" width="100%">
             <Text>{user.email}</Text>
-            <Button onClick={() => handleRemoveUser(user.id)}>Remove</Button>
+            <Button onClick={() => handleRemoveUser(projectId, user.id)}>Remove</Button>
           </Box>
         ))}
       </VStack>
