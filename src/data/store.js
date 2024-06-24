@@ -31,6 +31,25 @@ const initialData = {
     },
   },
   columnOrder: ["column-1", "column-2", "column-3"],
+  projects: [
+    {
+      id: 1,
+      name: "Project 1",
+      ownerId: users[0].id,
+      kanban: {
+        tasks: {},
+        columns: {
+          "column-1": { id: "column-1", title: "To do", taskIds: [] },
+          "column-2": { id: "column-2", title: "In progress", taskIds: [] },
+          "column-3": { id: "column-3", title: "Done", taskIds: [] },
+        },
+        columnOrder: ["column-1", "column-2", "column-3"],
+      },
+      chat: [],
+      notes: [],
+      users: [],
+    },
+  ],
 };
 
 export { users, initialData };

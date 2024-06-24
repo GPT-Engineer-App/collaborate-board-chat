@@ -7,12 +7,16 @@ const UserManagement = () => {
   const { projectId } = useParams();
   const [project, setProject] = useState(null);
   const [newUserEmail, setNewUserEmail] = useState("");
+  const [currentUser, setCurrentUser] = useState(null); // Assuming you have a way to get the current user
 
   useEffect(() => {
     const fetchProject = async () => {
       const storedProjects = await getItem("projects");
       const currentProject = storedProjects.find((proj) => proj.id === parseInt(projectId));
       setProject(currentProject);
+      // Assuming you have a way to get the current user
+      const user = await getCurrentUser();
+      setCurrentUser(user);
     };
     fetchProject();
   }, [projectId]);
@@ -20,7 +24,7 @@ const UserManagement = () => {
   const handleAddUser = async () => {
     const updatedProject = {
       ...project,
-      users: [...project.users, { email: newUserEmail, id: Date.now() }],
+      users: [...project.users, { email: newUserEmail, id: Date.now(), username: '', password: '' }],
     };
     const storedProjects = await getItem("projects");
     const updatedProjects = storedProjects.map((proj) =>
@@ -45,6 +49,8 @@ const UserManagement = () => {
   };
 
   if (!project) return <Text>Loading...</Text>;
+
+  if (currentUser.id !== project.ownerId) return <Text>You do not have permission to view this page.</Text>;
 
   return (
     <Box p={4}>
