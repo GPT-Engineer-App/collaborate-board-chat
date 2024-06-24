@@ -18,14 +18,20 @@ const Projects = () => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const storedSessionProjects = await getItem("sessionProjects");
-      if (storedSessionProjects) {
-        setProjects(storedSessionProjects);
-      } else {
-        const storedProjects = await getItem("projects");
-        if (storedProjects) {
-          setProjects(storedProjects);
+      try {
+        const storedSessionProjects = await getItem("sessionProjects");
+        if (storedSessionProjects) {
+          setProjects(storedSessionProjects);
+          setSessionProjects(storedSessionProjects);
+        } else {
+          const storedProjects = await getItem("projects");
+          if (storedProjects) {
+            setProjects(storedProjects);
+            setSessionProjects(storedProjects);
+          }
         }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
       }
     };
     fetchProjects();
@@ -33,7 +39,11 @@ const Projects = () => {
 
   useEffect(() => {
     const updateSessionProjects = async () => {
-      await setItem("sessionProjects", projects);
+      try {
+        await setItem("sessionProjects", projects);
+      } catch (error) {
+        console.error("Error updating session projects:", error);
+      }
     };
     updateSessionProjects();
   }, [projects]);
@@ -58,6 +68,7 @@ const Projects = () => {
     };
     const updatedProjects = [...projects, newProject];
     setProjects(updatedProjects);
+    setSessionProjects(updatedProjects);
     await setItem("projects", updatedProjects);
     await setItem("sessionProjects", updatedProjects);
     setNewProjectName("");
