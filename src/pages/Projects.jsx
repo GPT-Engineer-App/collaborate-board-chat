@@ -1,34 +1,44 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { users } from '../data/store';
-
-const currentUser = users[0]; // Assuming the first user is the current user
-
 import { Box, Button, Input, VStack, Heading } from "@chakra-ui/react";
-import { setItem, getItem } from "../utils/storage";
+import { setItem, getItem, removeItem } from "../utils/storage";
 import Kanban from "./Kanban.jsx";
 import Chat from "./Chat.jsx";
 import Notes from "./Notes.jsx";
 import UserManagement from "./UserManagement.jsx";
 
+const currentUser = users[0]; // Assuming the first user is the current user
+
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState("");
+  const [sessionProjects, setSessionProjects] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const storedProjects = await getItem("projects");
-      if (storedProjects) {
-        setProjects(storedProjects);
+      const storedSessionProjects = await getItem("sessionProjects");
+      if (storedSessionProjects) {
+        setProjects(storedSessionProjects);
+      } else {
+        const storedProjects = await getItem("projects");
+        if (storedProjects) {
+          setProjects(storedProjects);
+        }
       }
     };
     fetchProjects();
   }, []);
 
+  useEffect(() => {
+    const updateSessionProjects = async () => {
+      await setItem("sessionProjects", projects);
+    };
+    updateSessionProjects();
+  }, [projects]);
+
   const handleCreateProject = async () => {
-    const currentUser = users[0]; // Assuming the first user is the current user
-    
     const newProject = {
       id: Date.now(),
       name: newProjectName,
@@ -49,6 +59,7 @@ const Projects = () => {
     const updatedProjects = [...projects, newProject];
     setProjects(updatedProjects);
     await setItem("projects", updatedProjects);
+    await setItem("sessionProjects", updatedProjects);
     setNewProjectName("");
   };
 
