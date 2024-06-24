@@ -1,4 +1,4 @@
-import { Box, Heading, VStack, Input, Button, Text } from "@chakra-ui/react";
+import { Box, Heading, VStack, Input, Button, Text, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 
 const Notes = () => {
