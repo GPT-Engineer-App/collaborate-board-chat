@@ -14,6 +14,7 @@ const Projects = () => {
   const [projects, setProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState("");
   const [sessionProjects, setSessionProjects] = useState([]);
+  const [showCreateProjectForm, setShowCreateProjectForm] = useState(false);
   const navigate = useNavigate();
   const { projectId } = useParams();
 
@@ -73,6 +74,7 @@ const Projects = () => {
     await setItem("projects", updatedProjects);
     await setItem("sessionProjects", updatedProjects);
     setNewProjectName("");
+    setShowCreateProjectForm(false);
   };
 
   return (
@@ -80,12 +82,19 @@ const Projects = () => {
       <Heading mb={4}>Projects</Heading>
       {!projectId && (
         <VStack spacing={4} align="start">
-          <Input
-            placeholder="New Project Name"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-          />
-          <Button onClick={handleCreateProject}>Create Project</Button>
+          <Button onClick={() => setShowCreateProjectForm(!showCreateProjectForm)}>
+            {showCreateProjectForm ? "Cancel" : "Create New Project"}
+          </Button>
+          {showCreateProjectForm && (
+            <>
+              <Input
+                placeholder="New Project Name"
+                value={newProjectName}
+                onChange={(e) => setNewProjectName(e.target.value)}
+              />
+              <Button onClick={handleCreateProject}>Create Project</Button>
+            </>
+          )}
           {projects.map((project) => (
             <Button key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
               {project.name}
