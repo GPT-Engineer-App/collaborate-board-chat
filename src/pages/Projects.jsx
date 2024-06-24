@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom";
+import { useNavigate, Routes, Route, useParams } from "react-router-dom";
 import { users } from '../data/store';
 import { Box, Button, Input, VStack, Heading } from "@chakra-ui/react";
 import { setItem, getItem, removeItem } from "../utils/storage";
@@ -15,6 +15,7 @@ const Projects = () => {
   const [newProjectName, setNewProjectName] = useState("");
   const [sessionProjects, setSessionProjects] = useState([]);
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -77,19 +78,21 @@ const Projects = () => {
   return (
     <Box p={4}>
       <Heading mb={4}>Projects</Heading>
-      <VStack spacing={4} align="start">
-        <Input
-          placeholder="New Project Name"
-          value={newProjectName}
-          onChange={(e) => setNewProjectName(e.target.value)}
-        />
-        <Button onClick={handleCreateProject}>Create Project</Button>
-        {projects.map((project) => (
-          <Button key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
-            {project.name}
-          </Button>
-        ))}
-      </VStack>
+      {!projectId && (
+        <VStack spacing={4} align="start">
+          <Input
+            placeholder="New Project Name"
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+          />
+          <Button onClick={handleCreateProject}>Create Project</Button>
+          {projects.map((project) => (
+            <Button key={project.id} onClick={() => navigate(`/projects/${project.id}`)}>
+              {project.name}
+            </Button>
+          ))}
+        </VStack>
+      )}
       <Routes>
         <Route path=":projectId/kanban" element={<Kanban />} />
         <Route path=":projectId/chat" element={<Chat />} />
