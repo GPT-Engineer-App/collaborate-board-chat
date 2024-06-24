@@ -9,14 +9,8 @@ const Navbar = () => {
           <Link as={NavLink} to="/" px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
             Home
           </Link>
-          <Link as={NavLink} to="/kanban" px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
-            Kanban
-          </Link>
-          <Link as={NavLink} to="/chat" px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
-            Chat
-          </Link>
-          <Link as={NavLink} to="/notes" px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
-            Notes
+          <Link as={NavLink} to="/projects" px={2} py={1} rounded="md" _hover={{ textDecoration: "none", bg: "brand.900" }} _activeLink={{ bg: "brand.900" }}>
+            Projects
           </Link>
         </Box>
       </Flex>
