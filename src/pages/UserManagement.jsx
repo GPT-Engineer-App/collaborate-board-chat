@@ -1,4 +1,9 @@
 import { useState, useEffect } from "react";
+import { users } from '../data/store';
+
+const getCurrentUser = async () => {
+  return users[0]; // Assuming the first user is the current user
+};
 import { useParams } from "react-router-dom";
 import { Box, Button, Input, VStack, Heading, Text } from "@chakra-ui/react";
 import { setItem, getItem } from "../utils/storage";
@@ -14,7 +19,6 @@ const UserManagement = () => {
       const storedProjects = await getItem("projects");
       const currentProject = storedProjects.find((proj) => proj.id === parseInt(projectId));
       setProject(currentProject);
-      // Assuming you have a way to get the current user
       const user = await getCurrentUser();
       setCurrentUser(user);
     };
